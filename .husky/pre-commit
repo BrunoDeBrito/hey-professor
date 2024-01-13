@@ -20,7 +20,7 @@ STAGED_FILES=$(git diff --cached --name-only --diff-filter=ACM | grep ".php\{0,1
 
 for FILE in $STAGED_FILES
 do
-    echo "Executando Pint para: $FILE"
+    echo "Executando Pint para: ${$FILE}"
     ./vendor/bin/pint "${FILE}" > /dev/null >&1
     echo "Pint executado com sucesso para: $FILE"
 
