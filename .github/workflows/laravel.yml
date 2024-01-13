@@ -36,4 +36,4 @@ jobs:
       run: vendor/bin/phpstan analyse
       
     - name: Execyte Laravel Pint
-      run: vendor/bin/pint --teste
+      run: vendor/bin/pint --test
