@@ -18,3 +18,5 @@ do
     ./vendor/bin/pint "${FILE}" > /dev/null >&1
     git add "${FILE}"
 done
+
+exit 0;
