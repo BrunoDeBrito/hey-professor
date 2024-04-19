@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Question;
 
 use Closure;
-use Illuminate\Http\{RedirectResponse, Request, Response};
+use Illuminate\Http\{RedirectResponse, Request};
 
 /**
  * Controller Responsável por gerenciar as perguntas
