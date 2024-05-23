@@ -50,6 +50,7 @@ class User extends Authenticatable implements MustVerifyEmail
     /**
      * Get the votes for the user
      *
+     * @return HasMany<Vote>
      */
     public function votes(): HasMany
     {
