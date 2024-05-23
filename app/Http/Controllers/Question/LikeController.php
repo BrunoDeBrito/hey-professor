@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Question;
 
 use App\Http\Controllers\Controller;
-use App\Models\{Question, Vote};
+use App\Models\{Question};
 use Illuminate\Http\{RedirectResponse};
 
 /**
@@ -15,17 +15,15 @@ use Illuminate\Http\{RedirectResponse};
  */
 class LikeController extends Controller
 {
+    /**
+     * Like a question
+     * @param Question $question
+     * @return RedirectResponse
+     */
     public function __invoke(Question $question): RedirectResponse
     {
 
-        Vote::query()->create([
-
-            'question_id' => $question->id,
-            'user_id'     => auth()->id(),
-            'like'        => 1,
-            'unlike'      => 0,
-
-        ]);
+        auth()->user()->like($question);
 
         return back();
     }
