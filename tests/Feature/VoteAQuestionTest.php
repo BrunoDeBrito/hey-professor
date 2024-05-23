@@ -13,7 +13,8 @@ it('should vote a question', function () {
     actingAs($user);
 
     // Act
-    post(route('question.like', $question));
+    post(route('question.like', $question))
+    ->assertRedirect();
 
     // Assert
     assertDatabaseHas('votes', [
