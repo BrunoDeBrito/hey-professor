@@ -17,13 +17,13 @@ class LikeController extends Controller
 {
     /**
      * Like a question
+     *
      * @param Question $question
      * @return RedirectResponse
      */
     public function __invoke(Question $question): RedirectResponse
     {
-
-        auth()->user()->like($question);
+        user()->like($question);
 
         return back();
     }
