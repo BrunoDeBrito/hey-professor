@@ -64,7 +64,7 @@ class User extends Authenticatable implements MustVerifyEmail
      * @param Question $question
      * @return void
      */
-    public function like(Question $question)
+    public function like(Question $question): void
     {
 
         $this->votes()->updateOrCreate(
@@ -74,6 +74,27 @@ class User extends Authenticatable implements MustVerifyEmail
             [
                 'like'   => 1,
                 'unlike' => 0,
+            ]
+        );
+
+    }
+
+    /**
+     * Unlike a question
+     *
+     * @param Question $question
+     * @return void
+     */
+    public function unlike(Question $question): void
+    {
+
+        $this->votes()->updateOrCreate(
+            [
+                'question_id' => $question->id,
+            ],
+            [
+                'like'   => 0,
+                'unlike' => 1,
             ]
         );
 
