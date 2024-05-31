@@ -3,7 +3,7 @@ use App\Models\{Question, User};
 
 use function Pest\Laravel\{actingAs, assertDatabaseHas, post};
 
-it('should vote a question', function () {
+it('should be able to like vote a question', function () {
 
     $user = User::factory()->create();
 
@@ -26,7 +26,7 @@ it('should vote a question', function () {
 
 });
 
-it('should note be able to unlike more than 1 time', function () {
+it('should note be able to like more than 1 time', function () {
 
     $user = User::factory()->create();
 
@@ -47,7 +47,7 @@ it('should note be able to unlike more than 1 time', function () {
 
 });
 
-it('should vote a question', function () {
+it('should be able to unlike vote a question', function () {
 
     $user = User::factory()->create();
 
