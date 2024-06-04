@@ -4,7 +4,7 @@ use App\Models\{Question, User};
 
 use function Pest\Laravel\{actingAs, put};
 
-it('shold be able to publish a question', function () {
+it('should be able to publish a question', function () {
 
     $user = User::factory()->create();
 
@@ -21,5 +21,9 @@ it('shold be able to publish a question', function () {
     expect($question)
     ->draft
     ->toBeFalse();
+
+});
+
+it('should make sure that only the person who has created the question can publish the question', function () {
 
 });
