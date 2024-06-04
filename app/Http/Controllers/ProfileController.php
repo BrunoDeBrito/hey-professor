@@ -7,6 +7,13 @@ use Illuminate\Http\{RedirectResponse, Request};
 use Illuminate\Support\Facades\{Auth, Redirect};
 use Illuminate\View\View;
 
+/**
+ * Controller responsible for the user's profile
+ *
+ * @author Bruno De Brito <bruno@gmail.com>
+ * @since 04/06/2024
+ * @version 1.0.0
+ */
 class ProfileController extends Controller
 {
     /**

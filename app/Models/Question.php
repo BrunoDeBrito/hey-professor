@@ -11,10 +11,11 @@ class Question extends Model
     use HasFactory;
 
     /**
-     * The attributes that are mass assignable.
-     * @var array<string>
+     * Get the attributes that should be cast.
+     *
+     * @return array<string, string>
      */
-    protected $cast = [
+    protected $casts = [
         'draft' => 'boolean',
     ];
 

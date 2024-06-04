@@ -8,7 +8,7 @@ use Closure;
 use Illuminate\Http\{RedirectResponse, Request};
 
 /**
- * Controller Responsável por gerenciar as perguntas
+ * Controller responsible for the questions
  *
  * @author Bruno De Brito <bruno@gmail.com>
  * @since 14/02/2024
