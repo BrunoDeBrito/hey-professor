@@ -18,6 +18,6 @@ class QestionPolicy
      */
     public function publish(User $user, Question $question): bool
     {
-        return $question->createdBy()->is($user);
+        return $question->createdBy->is($user);
     }
 }
