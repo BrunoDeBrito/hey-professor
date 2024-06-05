@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Question;
-
 use Closure;
 use Illuminate\Http\{RedirectResponse, Request};
 
@@ -24,7 +22,7 @@ class QuestionController extends Controller
     public function store(Request $request): RedirectResponse
     {
 
-        $attributes = request()->validate([
+        request()->validate([
             'question' => [
                 'required',
                 'min:10',
@@ -37,9 +35,9 @@ class QuestionController extends Controller
             'draft' => 'boolean',
         ]);
 
-        Question::query()
+        user()->questions()
             ->create([
-                'question' => $attributes['question'],
+                'question' => request()->question,
                 'draft'    => true,
             ]);
 
