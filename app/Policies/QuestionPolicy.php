@@ -2,17 +2,13 @@
 
 namespace App\Policies;
 
-use App\Models\{Question, User};
+use App\Models\Question;
+use App\Models\User;
+use Illuminate\Auth\Access\Response;
 
-/**
- * Policy responsible for managing the publication of a question
- *
- * @author Bruno De Brito <bruno@gmail.com>
- * @since 05/06/2024
- * @version 1.0.0
- */
-class QestionPolicy
+class QuestionPolicy
 {
+
     /**
      * Determine whether the user can view the model.
      */
@@ -20,4 +16,5 @@ class QestionPolicy
     {
         return $question->createdBy->is($user);
     }
+
 }

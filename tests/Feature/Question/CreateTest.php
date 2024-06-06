@@ -110,3 +110,18 @@ it('shold create as a draft all the time', function () {
     );
 
 });
+
+it('only authenticated users can create a new questions', function () {
+
+    /* Arrange :: Preparando */
+    $user = User::factory()->create();
+
+    /* action :: Agir */
+    post(
+        route('question.store'),
+        [
+            'question' => str_repeat('*', 8) . '?',
+        ]
+    )->assertRedirect(route('login'));
+
+});
