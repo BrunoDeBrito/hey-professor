@@ -111,7 +111,7 @@ it('shold create as a draft all the time', function () {
 
 });
 
-it('only authenticated users can create a new questions', function () {
+test('only authenticated users can create a new questions', function () {
 
     /* Arrange :: Preparando */
     $user = User::factory()->create();

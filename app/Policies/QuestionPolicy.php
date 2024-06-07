@@ -2,13 +2,10 @@
 
 namespace App\Policies;
 
-use App\Models\Question;
-use App\Models\User;
-use Illuminate\Auth\Access\Response;
+use App\Models\{Question, User};
 
 class QuestionPolicy
 {
-
     /**
      * Determine whether the user can view the model.
      */
