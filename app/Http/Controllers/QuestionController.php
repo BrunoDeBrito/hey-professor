@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Closure;
+use Illuminate\Contracts\View\View;
 use Illuminate\Http\{RedirectResponse, Request};
 
 /**
@@ -15,13 +16,26 @@ use Illuminate\Http\{RedirectResponse, Request};
 class QuestionController extends Controller
 {
     /**
+     * Method responsible for listing all questions
+     *
+     * @return View
+     */
+    public function index(): View
+    {
+        $data = [
+            'questions' => user()->questions,
+        ];
+
+        return view('question.index', $data);
+    }
+
+    /**
      * Método responsável por criar uma nova pergunta
      *
      * @return RedirectResponse
      */
     public function store(Request $request): RedirectResponse
     {
-
         request()->validate([
             'question' => [
                 'required',
@@ -41,7 +55,7 @@ class QuestionController extends Controller
                 'draft'    => true,
             ]);
 
-        return to_route('dashboard');
+        return back();
 
     }
 }

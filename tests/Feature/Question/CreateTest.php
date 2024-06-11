@@ -20,7 +20,8 @@ it('should be able to create a new question bigger than 255 characters', functio
     );
 
     /* Assert :: Verificar */
-    $request->assertRedirect(route('dashboard'));
+    $request->assertRedirect();
+
     assertDatabaseCount('questions', 1);
 
     assertDatabaseHas(

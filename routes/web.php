@@ -5,6 +5,7 @@ use App\Http\Controllers\{DashboardController, ProfileController, Question, Ques
 /* Controllers */
 use Illuminate\Support\Facades\Route;
 
+#region Dashboard
 Route::get('/', function () {
 
     if (app()->isLocal()) {
@@ -16,13 +17,18 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/dashboard', DashboardController::class)->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/dashboard', DashboardController::class)
+    ->middleware(['auth', 'verified'])
+    ->name('dashboard');
+#endregion
 
+#region Middleware Auth
 Route::middleware('auth')->group(function () {
 
     #region Question Routes
     Route::prefix('questions')->name('question.')->group(function () {
 
+        Route::get('', [QuestionController::class, 'index'])->name('index');
         Route::post('store', [QuestionController::class, 'store'])->name('store');
         Route::post('like/{question}', Question\LikeController::class)->name('like');
         Route::post('unlike/{question}', Question\UnlikeController::class)->name('unlike');
@@ -37,5 +43,6 @@ Route::middleware('auth')->group(function () {
     #endregion
 
 });
+#endregion
 
 require __DIR__ . '/auth.php';
