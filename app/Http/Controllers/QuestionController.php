@@ -5,10 +5,11 @@ namespace App\Http\Controllers;
 use App\Models\Question;
 
 use Closure;
+use Illuminate\Contracts\View\View;
 use Illuminate\Http\{RedirectResponse, Request};
 
 /**
- * Controller Responsável por gerenciar as perguntas
+ * Controller responsible for the questions
  *
  * @author Bruno De Brito <bruno@gmail.com>
  * @since 14/02/2024
@@ -17,14 +18,27 @@ use Illuminate\Http\{RedirectResponse, Request};
 class QuestionController extends Controller
 {
     /**
+     * Method responsible for listing all questions
+     *
+     * @return View
+     */
+    public function index(): View
+    {
+        $data = [
+            'questions' => user()->questions,
+        ];
+
+        return view('question.index', $data);
+    }
+
+    /**
      * Método responsável por criar uma nova pergunta
      *
      * @return RedirectResponse
      */
     public function store(Request $request): RedirectResponse
     {
-
-        $attributes = request()->validate([
+        request()->validate([
             'question' => [
                 'required',
                 'min:10',
@@ -34,11 +48,27 @@ class QuestionController extends Controller
                     }
                 },
             ],
+            'draft' => 'boolean',
         ]);
 
-        Question::query()->create($attributes);
+        user()->questions()
+            ->create([
+                'question' => request()->question,
+                'draft'    => true,
+            ]);
 
-        return to_route('dashboard');
+        return back();
+
+    }
+
+    public function destroy(Question $question): RedirectResponse
+    {
+
+        $this->authorize('destroy', $question);
+
+        $question->delete();
+
+        return back();
 
     }
 }

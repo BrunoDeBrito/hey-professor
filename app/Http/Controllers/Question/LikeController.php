@@ -7,7 +7,7 @@ use App\Models\{Question};
 use Illuminate\Http\{RedirectResponse};
 
 /**
- * Like Controller
+ * Controller responsible for liki a question
  *
  * @author Bruno De Brito <bruno@gmail.com>
  * @since 21/05/2024

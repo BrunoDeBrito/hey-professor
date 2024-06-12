@@ -20,7 +20,8 @@ it('should be able to create a new question bigger than 255 characters', functio
     );
 
     /* Assert :: Verificar */
-    $request->assertRedirect(route('dashboard'));
+    $request->assertRedirect();
+
     assertDatabaseCount('questions', 1);
 
     assertDatabaseHas(
@@ -82,5 +83,46 @@ it('shoul have at least 10 characters', function () {
         ]
     );
     assertDatabaseCount('questions', 0);
+
+});
+
+it('shold create as a draft all the time', function () {
+
+    /* Arrange :: Preparando */
+    $user = User::factory()->create();
+
+    actingAs($user);
+
+    /* action :: Agir */
+    post(
+        route('question.store'),
+        [
+            'question' => str_repeat('*', 260) . '?',
+        ]
+    );
+
+    /* Assert :: Verificar */
+    assertDatabaseHas(
+        'questions',
+        [
+            'question' => str_repeat('*', 260) . '?',
+            'draft'    => true,
+        ]
+    );
+
+});
+
+test('only authenticated users can create a new questions', function () {
+
+    /* Arrange :: Preparando */
+    $user = User::factory()->create();
+
+    /* action :: Agir */
+    post(
+        route('question.store'),
+        [
+            'question' => str_repeat('*', 8) . '?',
+        ]
+    )->assertRedirect(route('login'));
 
 });
