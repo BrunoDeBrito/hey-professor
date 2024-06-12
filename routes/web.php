@@ -28,11 +28,17 @@ Route::middleware('auth')->group(function () {
     #region Question Routes
     Route::prefix('questions')->name('question.')->group(function () {
 
+        #region Question Methods
         Route::get('', [QuestionController::class, 'index'])->name('index');
         Route::post('store', [QuestionController::class, 'store'])->name('store');
+        Route::delete('{question}', [QuestionController::class, 'destroy'])->name('destroy');
+        #endregion
+
+        #region Question Actions
         Route::post('like/{question}', Question\LikeController::class)->name('like');
         Route::post('unlike/{question}', Question\UnlikeController::class)->name('unlike');
         Route::put(' publish/{question}', Question\PublishController::class)->name('publish');
+        #endregion
     });
     #endregion
 
