@@ -31,6 +31,7 @@ Route::middleware('auth')->group(function () {
         #region Question Methods
         Route::get('', [QuestionController::class, 'index'])->name('index');
         Route::post('store', [QuestionController::class, 'store'])->name('store');
+        Route::get('{question}/edit', [QuestionController::class, 'edit'])->name('edit');
         Route::delete('{question}', [QuestionController::class, 'destroy'])->name('destroy');
         #endregion
 
