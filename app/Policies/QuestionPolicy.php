@@ -19,6 +19,18 @@ class QuestionPolicy
     }
 
     /**
+     * Determine whether the user can update the model.
+     *
+     * @param User $user
+     * @param Question $question
+     * @return boolean
+     */
+    public function update(User $user, Question $question): bool
+    {
+        return $question->draft && $question->createdBy->is($user);
+    }
+
+    /**
      * Determine whether the user can delete the model.
      *
      * @param User $user
