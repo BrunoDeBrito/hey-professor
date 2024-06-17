@@ -20,7 +20,7 @@ it('should be able to update a question', function () {
             'question' => 'Update Question?',
         ]
     )
-    ->assertRedirect();
+    ->assertRedirect(route('question.index'));
 
     $question->refresh();
 
