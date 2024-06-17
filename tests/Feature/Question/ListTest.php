@@ -1,7 +1,7 @@
 <?php
 
 use App\Models\{Question, User};
-use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 use function Pest\Laravel\{actingAs, get};
 
@@ -38,5 +38,4 @@ it('should paginate the result', function () {
         'questions',
         fn ($value) => $value instanceof LengthAwarePaginator
     );
-
 });
