@@ -92,12 +92,21 @@ class QuestionController extends Controller
         return to_route('question.index');
     }
 
-    public function destroy(Question $question): RedirectResponse
+    public function archive(Question $question): RedirectResponse
     {
-
         $this->authorize('destroy', $question);
 
         $question->delete();
+
+        return back();
+
+    }
+
+    public function destroy(Question $question): RedirectResponse
+    {
+        $this->authorize('destroy', $question);
+
+        $question->forceDelete();
 
         return back();
 

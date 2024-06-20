@@ -21,10 +21,11 @@ class DashboardController extends Controller
             'questions' => Question::withSum('votes', 'like')
                 ->withSum('votes', 'unlike')
                 ->orderByRaw('
-                    case when votes_sum_like is null then 0 else votes_sum_like end desc,
-                    case when votes_sum_unlike is null then 0 else votes_sum_unlike end
+                    case when (SELECT sum(votes.like) FROM votes WHERE questions.id = votes.question_id) is null then 0 else (SELECT sum(votes.like) FROM votes WHERE questions.id = votes.question_id) end desc,
+                    case when (SELECT sum(votes.unlike) FROM votes WHERE questions.id = votes.question_id) is null then 0 else (SELECT sum(votes.unlike) FROM votes WHERE questions.id = votes.question_id) end
                 ')
             ->paginate(5),
+
         ];
 
         return view('dashboard', $data);

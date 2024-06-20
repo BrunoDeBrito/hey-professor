@@ -15,6 +15,8 @@
 
         </div>
 
+        {{ $questions->links() }}
+
     </x-container>
 
 </x-app-layout>
