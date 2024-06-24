@@ -105,10 +105,10 @@ class QuestionController extends Controller
     /**
      * Método responsável por restaurar uma pergunta
      *
-     * @param Question $id
+     * @param int $id
      * @return RedirectResponse
      */
-    public function restore($id): RedirectResponse
+    public function restore(int $id): RedirectResponse
     {
         $question = Question::withTrashed()->find($id);
         $question->restore();
