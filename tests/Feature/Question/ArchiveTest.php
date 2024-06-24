@@ -6,7 +6,7 @@ use function Pest\Laravel\{actingAs, assertNotSoftDeleted, assertSoftDeleted, pa
 
 it('should be able to archive a question', function () {
 
-    $user = User::factory()->create();
+    $user     = User::factory()->create();
     $question = Question::factory()
         ->for($user, 'createdBy')
         ->create(['draft' => true]);
@@ -47,7 +47,7 @@ it('should make sure that only the person who has created the question can archi
 
 it('should be able to restore an archived question', function () {
 
-    $user = User::factory()->create();
+    $user     = User::factory()->create();
     $question = Question::factory()
         ->for($user, 'createdBy')
         ->create(['draft' => true, 'deleted_at' => now()]);
