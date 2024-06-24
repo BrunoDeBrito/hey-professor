@@ -102,6 +102,21 @@ class QuestionController extends Controller
 
     }
 
+    /**
+     * Método responsável por restaurar uma pergunta
+     *
+     * @param Question $id
+     * @return RedirectResponse
+     */
+    public function restore($id): RedirectResponse
+    {
+        $question = Question::withTrashed()->find($id);
+        $question->restore();
+
+        return back();
+
+    }
+
     public function destroy(Question $question): RedirectResponse
     {
         $this->authorize('destroy', $question);
