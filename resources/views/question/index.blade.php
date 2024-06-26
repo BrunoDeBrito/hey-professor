@@ -45,9 +45,9 @@
 
                                     <x-form :action="route('question.publish', $item)" put>
                                         <button type="submit" title="Publish" class="hover:underline text-green-500">
-                                            <svg class="w-5 h-5 text-gray-800 dark:text-green-500 hover:dark:text-green-300" aria-hidden="true"
-                                                xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                                fill="none" viewBox="0 0 24 24">
+                                            <svg class="w-5 h-5 text-gray-800 dark:text-green-500 hover:dark:text-green-300"
+                                                aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24"
+                                                height="24" fill="none" viewBox="0 0 24 24">
                                                 <path stroke="currentColor" stroke-linecap="round"
                                                     stroke-linejoin="round" stroke-width="2"
                                                     d="M8.5 11.5 11 14l4-4m6 2a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
@@ -56,7 +56,8 @@
                                     </x-form>
 
                                     <x-form :action="route('question.update', $item)" put>
-                                        <a href="{{ route('question.edit', $item) }}" title="Edit" class="hover:underline text-blue-500 ">
+                                        <a href="{{ route('question.edit', $item) }}" title="Edit"
+                                            class="hover:underline text-blue-500 ">
                                             <svg class="w-5 h-5 text-gray-800 dark:text-blue-500 hover:dark:text-blue-300 mb-2"
                                                 aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24"
                                                 height="24" fill="currentColor" viewBox="0 0 24 24">
@@ -70,7 +71,7 @@
                                         </a>
                                     </x-form>
 
-                                    <x-form :action="route('question.destroy', $item)" delete>
+                                    <x-form :action="route('question.destroy', $item)" delete onsubmit="return confirm('Tem Certeza?')">
                                         <button type="submit" title="Delete"
                                             class="text-center inline-flex items-center me-2 hover:underline text-red-500">
                                             <svg class="w-5 h-5 text-gray-200 dark:text-red-500 hover:dark:text-red-300"
@@ -87,7 +88,6 @@
 
                             </x-table.tr>
                         @endforeach
-
 
                     </tbody>
 
@@ -124,7 +124,8 @@
                                 <x-table.td>{{ $item->question }}</x-table.td>
 
                                 <x-table.td>
-                                    <x-form :action="route('question.destroy', $item)" delete>
+
+                                    <x-form :action="route('question.destroy', $item)" delete onsubmit="return confirm('Tem Certeza?')">
                                         <button type="submit" title="Delete"
                                             class="text-center inline-flex items-center me-2 hover:underline text-red-500">
                                             <svg class="w-5 h-5 text-gray-200 dark:text-red-500 hover:dark:text-red-300"
@@ -136,11 +137,78 @@
                                             </svg>
                                         </button>
                                     </x-form>
+
+                                    <x-form :action="route('question.archive', $item)" patch>
+                                        <button type="submit" title="Archive"
+                                            class="text-center inline-flex items-center me-2 hover:underline text-red-500">
+                                            <svg class="w-5 h-5 dark:text-yellow-500 hover:dark:text-yellow-300"
+                                                aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24"
+                                                height="24" fill="none" viewBox="0 0 24 24">
+                                                <path stroke="currentColor" stroke-linecap="round"
+                                                    stroke-linejoin="round" stroke-width="2"
+                                                    d="M12 11v5m0 0 2-2m-2 2-2-2M3 6v1a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1V6a1 1 0 0 0-1-1H4a1 1 0 0 0-1 1Zm2 2v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V8H5Z" />
+                                            </svg>
+
+                                        </button>
+                                    </x-form>
+
                                 </x-table.td>
 
                             </x-table.tr>
                         @endforeach
 
+                    </tbody>
+
+                </x-table.thead>
+
+            </x-table>
+
+        </div>
+        {{-- fim --}}
+
+        <hr class="border-gray-700 border-dashed my-4 mt-8">
+
+        {{-- Listagem de Perguntas Arquivadas --}}
+        <div class="dark:text-gray-300 uppercase font-bold mb-1">
+            Archived Qestions
+        </div>
+
+        <div class="dark:text-gray-400 space-y-4">
+
+            <x-table>
+
+                <x-table.thead>
+
+                    <tr>
+                        <x-table.th> Question </x-table.th>
+                        <x-table.th> Actions </x-table.th>
+                    </tr>
+
+                    <tbody>
+
+                        @foreach ($archivedQuestion as $item)
+                            <x-table.tr>
+
+                                <x-table.td>{{ $item->question }}</x-table.td>
+
+                                <x-table.td>
+                                    <x-form :action="route('question.restore', $item)" patch>
+                                        <button type="submit" title="Restore"
+                                            class="text-center inline-flex items-center me-2 hover:underline text-red-500">
+                                            <svg class="w-5 h-5 text-gray-800 dark:text-blue-500 hover:dark:text-blue-300"
+                                                aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24"
+                                                height="24" fill="none" viewBox="0 0 24 24">
+                                                <path stroke="currentColor" stroke-linecap="round"
+                                                    stroke-linejoin="round" stroke-width="2"
+                                                    d="M3 9h13a5 5 0 0 1 0 10H7M3 9l4-4M3 9l4 4" />
+                                            </svg>
+                                        </button>
+                                    </x-form>
+
+                                </x-table.td>
+
+                            </x-table.tr>
+                        @endforeach
 
                     </tbody>
 

@@ -25,7 +25,8 @@ class QuestionController extends Controller
     public function index(): View
     {
         $data = [
-            'questions' => user()->questions,
+            'questions'        => user()->questions,
+            'archivedQuestion' => user()->questions()->onlyTrashed()->get(),
         ];
 
         return view('question.index', $data);
