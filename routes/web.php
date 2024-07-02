@@ -1,28 +1,34 @@
 <?php
 
+use App\Http\Controllers\Auth\Github\{CallbackController, RedirectController};
 use App\Http\Controllers\{DashboardController, ProfileController, Question, QuestionController};
-
-/* Controllers */
 use Illuminate\Support\Facades\Route;
 
 #region Dashboard
 Route::get('/', function () {
 
-    if (app()->isLocal()) {
-        auth()->loginUsingId(1);
+    // if (app()->isLocal()) {
+    //     auth()->loginUsingId(1);
 
-        return redirect(route('dashboard'));
-    }
+    //     return redirect(route('dashboard'));
+    // }
 
     return view('welcome');
 });
 
 Route::get('/dashboard', DashboardController::class)
     ->middleware(['auth', 'verified'])
-    ->name('dashboard');
+->name('dashboard');
 #endregion
 
-#region Middleware Auth
+#region Github
+Route::get('/github/login', RedirectController::class)
+->name('github.login');
+
+Route::get('/github/callback', CallbackController::class)
+->name('github.callback');
+#endregion
+
 Route::middleware('auth')->group(function () {
 
     #region Question Routes
@@ -43,6 +49,7 @@ Route::middleware('auth')->group(function () {
         Route::post('unlike/{question}', Question\UnlikeController::class)->name('unlike');
         Route::put(' publish/{question}', Question\PublishController::class)->name('publish');
         #endregion
+
     });
     #endregion
 
@@ -53,6 +60,5 @@ Route::middleware('auth')->group(function () {
     #endregion
 
 });
-#endregion
 
 require __DIR__ . '/auth.php';
