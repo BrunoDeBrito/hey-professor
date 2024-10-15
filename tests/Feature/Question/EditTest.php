@@ -1,76 +1,159 @@
 <?php
 
 use App\Models\{Question, User};
+use Laravel\Sanctum\Sanctum;
 
-use function Pest\Laravel\{actingAs, get};
+use function Pest\Laravel\{assertDatabaseHas, postJson, putJson};
 
-it('should be able to open a question to edit', function () {
+it('should be able to update a question', function () {
+    $user     = User::factory()->create();
+    $question = Question::factory()->create(['user_id' => $user->id]);
 
-    $user = User::factory()->create();
+    Sanctum::actingAs($user);
 
-    $question = Question::factory()
-    ->for($user, 'createdBy')
-    ->create(['draft' => true]);
+    putJson(route('questions.update', $question), [
+        'question' => 'Updating question?',
+    ])->assertOk();
 
-    actingAs($user);
-
-    get(route('question.edit', $question))
-    ->assertSuccessful();
-
+    assertDatabaseHas('questions', [
+        'id'       => $question->id,
+        'user_id'  => $user->id,
+        'question' => 'Updating question?',
+    ]);
 });
 
-it('should return a view', function () {
+describe('validation rules', function () {
+    test('question::required', function () {
+        $user     = User::factory()->create();
+        $question = Question::factory()->create(['user_id' => $user->id]);
 
-    $user = User::factory()->create();
+        Sanctum::actingAs($user);
 
-    $question = Question::factory()
-    ->for($user, 'createdBy')
-    ->create(['draft' => true]);
+        putJson(route('questions.update', $question), [
+            'question' => '',
+        ])->assertJsonValidationErrors([
+            'question' => 'required',
+        ]);
+    });
 
-    actingAs($user);
+    test('question::ending with question mark', function () {
+        $user     = User::factory()->create();
+        $question = Question::factory()->create(['user_id' => $user->id]);
 
-    get(route('question.edit', $question))
-    ->assertViewIs('question.edit');
+        Sanctum::actingAs($user);
 
+        putJson(route('questions.update', $question), [
+            'question' => 'Question should have a mark',
+        ])->assertJsonValidationErrors([
+            'question' => 'The question should end with question mark (?).',
+        ]);
+    });
+
+    test('question::min characters should be 10', function () {
+        $user     = User::factory()->create();
+        $question = Question::factory()->create(['user_id' => $user->id]);
+
+        Sanctum::actingAs($user);
+
+        putJson(route('questions.update', $question), [
+            'question' => 'Question?',
+        ])->assertJsonValidationErrors([
+            'question' => 'least 10 characters',
+        ]);
+    });
+
+    test('question::should be unique', function () {
+        $user = User::factory()->create();
+        Question::factory()->create([
+            'question' => 'Lorem ipsum jeremias?',
+            'status'   => 'draft',
+            'user_id'  => $user->id,
+        ]);
+
+        $question = Question::factory()->create([
+            'user_id' => $user->id,
+        ]);
+
+        Sanctum::actingAs($user);
+
+        putJson(route('questions.update', $question), [
+            'question' => 'Lorem ipsum jeremias?',
+        ])->assertJsonValidationErrors([
+            'question' => 'already been taken',
+        ]);
+    });
+
+    test('question::should be unique only if id is different', function () {
+        $user     = User::factory()->create();
+        $question = Question::factory()->create([
+            'question' => 'Lorem ipsum jeremias?',
+            'user_id'  => $user->id,
+        ]);
+
+        Sanctum::actingAs($user);
+
+        putJson(route('questions.update', $question), [
+            'question' => 'Lorem ipsum jeremias?',
+        ])->assertOk();
+    });
+
+    test('question::should be able to edit only if the status is in draft', function () {
+        $user     = User::factory()->create();
+        $question = Question::factory()->create(['user_id' => $user->id, 'status' => 'published']);
+
+        Sanctum::actingAs($user);
+
+        putJson(route('questions.update', $question), [
+            'question' => 'Question should have a mark?',
+        ])->assertJsonValidationErrors([
+            'question' => 'The question should be a draft to be able to edit.',
+        ]);
+    });
+});
+describe('security', function () {
+    test('only the person who create the question can update the same question', function () {
+        $user1 = User::factory()->create();
+        $user2 = User::factory()->create();
+
+        $question = Question::factory()->create(['user_id' => $user1->id]);
+
+        Sanctum::actingAs($user2);
+
+        putJson(route('questions.update', $question), [
+            'question' => 'updating the question?',
+        ])->assertForbidden();
+
+        assertDatabaseHas('questions', [
+            'id'       => $question->id,
+            'question' => $question->question,
+        ]);
+    });
 });
 
-it('should make sure that only question with status DRAFT can be edited', function () {
+test('after creating we should return a status 200 with the created question', function () {
+    $user     = User::factory()->create();
+    $question = Question::factory()->for($user, 'user')->create();
 
-    $user = User::factory()->create();
+    Sanctum::actingAs($user);
 
-    $questionNotDraft = Question::factory()
-    ->for($user, 'createdBy')
-    ->create(['draft' => false]);
+    $request = putJson(
+        route('questions.update', $question),
+        ['question' => 'Lorem ipsum jeremias?']
+    )->assertOk();
 
-    $draftQuestion = Question::factory()
-    ->for($user, 'createdBy')
-    ->create(['draft' => true]);
+    $question = Question::latest()->first();
 
-    actingAs($user);
-
-    get(route('question.edit', $questionNotDraft))
-    ->assertForbidden();
-
-    get(route('question.edit', $draftQuestion))
-    ->assertSuccessful();
-
-});
-
-it('should make sure that only the person who has created the question can edit the question', function () {
-
-    $rightUser = User::factory()->create();
-    $wrongUser = User::factory()->create();
-
-    $question = Question::factory()
-    ->create(['draft' => true, 'created_by' => $rightUser->id]);
-
-    actingAs($wrongUser);
-
-    get(route('question.edit', $question))
-        ->assertForbidden();
-
-    actingAs($rightUser);
-
-    get(route('question.edit', $question))
-        ->assertSuccessful();
+    $request->assertJson([
+        'data' => [
+            'id'         => $question->id,
+            'question'   => $question->question,
+            'status'     => $question->status,
+            'created_by' => [
+                'id'   => $user->id,
+                'name' => $user->name,
+            ],
+            'created_at' => $question->created_at->format('Y-m-d h:i:s'),
+            'updated_at' => $question->updated_at->format('Y-m-d h:i:s'),
+        ],
+    ]);
 });

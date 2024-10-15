@@ -2,15 +2,14 @@
 
 namespace App\Models;
 
-use Illuminate\Contracts\Auth\MustVerifyEmail;
+// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-
 use Laravel\Sanctum\HasApiTokens;
 
-class User extends Authenticatable implements MustVerifyEmail
+class User extends Authenticatable
 {
     use HasApiTokens;
     use HasFactory;
@@ -25,7 +24,6 @@ class User extends Authenticatable implements MustVerifyEmail
         'name',
         'email',
         'password',
-        '',
     ];
 
     /**
@@ -48,60 +46,8 @@ class User extends Authenticatable implements MustVerifyEmail
         'password'          => 'hashed',
     ];
 
-    /**
-     * Get the votes for the user
-     *
-     * @return HasMany<Vote>
-     */
-    public function votes(): HasMany
-    {
-        return $this->hasMany(Vote::class);
-    }
-
-    /**
-     * Like a question
-     *
-     * @param Question $question
-     * @return void
-     */
-    public function like(Question $question): void
-    {
-
-        $this->votes()->updateOrCreate(
-            [
-                'question_id' => $question->id,
-            ],
-            [
-                'like'   => 1,
-                'unlike' => 0,
-            ]
-        );
-
-    }
-
-    /**
-     * Unlike a question
-     *
-     * @param Question $question
-     * @return void
-     */
-    public function unlike(Question $question): void
-    {
-
-        $this->votes()->updateOrCreate(
-            [
-                'question_id' => $question->id,
-            ],
-            [
-                'like'   => 0,
-                'unlike' => 1,
-            ]
-        );
-
-    }
-
     public function questions(): HasMany
     {
-        return $this->hasMany(Question::class, 'created_by');
+        return $this->hasMany(Question::class);
     }
 }
